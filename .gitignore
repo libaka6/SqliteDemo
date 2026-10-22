@@ -1,0 +1,17 @@
+## 编译产物
+bin/
+obj/
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.userprefs
+
+## NuGet
+packages/
+*.nupkg
+
+## 日志/临时文件
+*.log
+*.db
