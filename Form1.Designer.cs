@@ -28,230 +28,362 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnInsert = new System.Windows.Forms.Button();
-            this.btnQuery = new System.Windows.Forms.Button();
-            this.btnUpdate = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.txtValue = new System.Windows.Forms.TextBox();
-            this.txtRemark = new System.Windows.Forms.TextBox();
-            this.txtId = new System.Windows.Forms.TextBox();
-            this.txtLog = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.grpConnection = new System.Windows.Forms.GroupBox();
+            this.lblStatus = new System.Windows.Forms.Label();
+            this.btnConnect = new System.Windows.Forms.Button();
+            this.txtIP = new System.Windows.Forms.TextBox();
+            this.btnStart = new System.Windows.Forms.Button();
+            this.layoutMain = new System.Windows.Forms.TableLayoutPanel();
+            this.layoutContent = new System.Windows.Forms.TableLayoutPanel();
+            this.layoutLeft = new System.Windows.Forms.TableLayoutPanel();
+            this.grpManual = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.chkTime = new System.Windows.Forms.CheckBox();
-            this.dtpStart = new System.Windows.Forms.DateTimePicker();
-            this.dtpEnd = new System.Windows.Forms.DateTimePicker();
-            this.txtKeyword = new System.Windows.Forms.TextBox();
-            this.btnRefresh = new System.Windows.Forms.Button();
-            this.btnPrev = new System.Windows.Forms.Button();
-            this.btnNext = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnInsert = new System.Windows.Forms.Button();
+            this.txtId = new System.Windows.Forms.TextBox();
+            this.txtRemark = new System.Windows.Forms.TextBox();
+            this.txtValue = new System.Windows.Forms.TextBox();
+            this.grpRealtime = new System.Windows.Forms.GroupBox();
+            this.lblLatestTime = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.lblRunStatus = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.lblCurrentValue = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.lblPageInfo = new System.Windows.Forms.Label();
+            this.layoutRight = new System.Windows.Forms.TableLayoutPanel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.colId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colRemark = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txtIP = new System.Windows.Forms.TextBox();
-            this.btnConnect = new System.Windows.Forms.Button();
-            this.btnStart = new System.Windows.Forms.Button();
-            this.lblStatus = new System.Windows.Forms.Label();
+            this.grpQuery = new System.Windows.Forms.GroupBox();
+            this.btnRefresh = new System.Windows.Forms.Button();
+            this.btnQuery = new System.Windows.Forms.Button();
+            this.txtKeyword = new System.Windows.Forms.TextBox();
+            this.dtpEnd = new System.Windows.Forms.DateTimePicker();
+            this.dtpStart = new System.Windows.Forms.DateTimePicker();
+            this.chkTime = new System.Windows.Forms.CheckBox();
+            this.panelPage = new System.Windows.Forms.Panel();
+            this.lblPageInfo = new System.Windows.Forms.Label();
+            this.btnNext = new System.Windows.Forms.Button();
+            this.btnPrev = new System.Windows.Forms.Button();
+            this.grpLog = new System.Windows.Forms.GroupBox();
+            this.txtLog = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.lblRunDuration = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.lblCollectCount = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.lblFailCount = new System.Windows.Forms.Label();
+            this.grpConnection.SuspendLayout();
+            this.layoutMain.SuspendLayout();
+            this.layoutContent.SuspendLayout();
+            this.layoutLeft.SuspendLayout();
+            this.grpManual.SuspendLayout();
+            this.grpRealtime.SuspendLayout();
+            this.layoutRight.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.grpQuery.SuspendLayout();
+            this.panelPage.SuspendLayout();
+            this.grpLog.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnInsert
+            // grpConnection
             // 
-            this.btnInsert.Location = new System.Drawing.Point(109, 106);
-            this.btnInsert.Name = "btnInsert";
-            this.btnInsert.Size = new System.Drawing.Size(89, 37);
-            this.btnInsert.TabIndex = 0;
-            this.btnInsert.Text = "插入";
-            this.btnInsert.UseVisualStyleBackColor = true;
-            this.btnInsert.Click += new System.EventHandler(this.btnInsert_Click);
+            this.grpConnection.Controls.Add(this.lblStatus);
+            this.grpConnection.Controls.Add(this.btnConnect);
+            this.grpConnection.Controls.Add(this.txtIP);
+            this.grpConnection.Controls.Add(this.btnStart);
+            this.grpConnection.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpConnection.Location = new System.Drawing.Point(13, 13);
+            this.grpConnection.Name = "grpConnection";
+            this.grpConnection.Size = new System.Drawing.Size(1104, 53);
+            this.grpConnection.TabIndex = 0;
+            this.grpConnection.TabStop = false;
+            this.grpConnection.Text = "连接控制";
             // 
-            // btnQuery
+            // lblStatus
             // 
-            this.btnQuery.Location = new System.Drawing.Point(109, 159);
-            this.btnQuery.Name = "btnQuery";
-            this.btnQuery.Size = new System.Drawing.Size(89, 41);
-            this.btnQuery.TabIndex = 1;
-            this.btnQuery.Text = "查询";
-            this.btnQuery.UseVisualStyleBackColor = true;
-            this.btnQuery.Click += new System.EventHandler(this.btnQuery_Click);
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(202, 27);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(89, 18);
+            this.lblStatus.TabIndex = 51;
+            this.lblStatus.Text = "● 未连接";
             // 
-            // btnUpdate
+            // btnConnect
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(109, 218);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(89, 35);
-            this.btnUpdate.TabIndex = 2;
-            this.btnUpdate.Text = "更新";
-            this.btnUpdate.UseVisualStyleBackColor = true;
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            this.btnConnect.Location = new System.Drawing.Point(412, 24);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(100, 29);
+            this.btnConnect.TabIndex = 49;
+            this.btnConnect.Text = "连接";
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
-            // btnDelete
+            // txtIP
             // 
-            this.btnDelete.Location = new System.Drawing.Point(109, 280);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(89, 35);
-            this.btnDelete.TabIndex = 3;
-            this.btnDelete.Text = "删除";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            this.txtIP.Location = new System.Drawing.Point(297, 24);
+            this.txtIP.Name = "txtIP";
+            this.txtIP.Size = new System.Drawing.Size(100, 28);
+            this.txtIP.TabIndex = 48;
             // 
-            // txtValue
+            // btnStart
             // 
-            this.txtValue.Location = new System.Drawing.Point(216, 72);
-            this.txtValue.Name = "txtValue";
-            this.txtValue.Size = new System.Drawing.Size(188, 28);
-            this.txtValue.TabIndex = 4;
-            this.txtValue.Text = "数值";
-            //this.txtValue.TextChanged += new System.EventHandler(this.txtValue_TextChanged);
+            this.btnStart.Location = new System.Drawing.Point(534, 24);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(101, 28);
+            this.btnStart.TabIndex = 50;
+            this.btnStart.Text = "开始采集";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
-            // txtRemark
+            // layoutMain
             // 
-            this.txtRemark.Location = new System.Drawing.Point(451, 72);
-            this.txtRemark.Name = "txtRemark";
-            this.txtRemark.Size = new System.Drawing.Size(202, 28);
-            this.txtRemark.TabIndex = 5;
-            this.txtRemark.Text = "备注";
-            //this.txtRemark.TextChanged += new System.EventHandler(this.txtRemark_TextChanged);
+            this.layoutMain.ColumnCount = 1;
+            this.layoutMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.layoutMain.Controls.Add(this.grpConnection, 0, 0);
+            this.layoutMain.Controls.Add(this.layoutContent, 0, 1);
+            this.layoutMain.Controls.Add(this.grpLog, 0, 2);
+            this.layoutMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutMain.Location = new System.Drawing.Point(0, 0);
+            this.layoutMain.Name = "layoutMain";
+            this.layoutMain.Padding = new System.Windows.Forms.Padding(10);
+            this.layoutMain.RowCount = 3;
+            this.layoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 59F));
+            this.layoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.layoutMain.Size = new System.Drawing.Size(1130, 753);
+            this.layoutMain.TabIndex = 0;
             // 
-            // txtId
+            // layoutContent
             // 
-            this.txtId.Location = new System.Drawing.Point(690, 72);
-            this.txtId.Name = "txtId";
-            this.txtId.Size = new System.Drawing.Size(204, 28);
-            this.txtId.TabIndex = 6;
-            this.txtId.Text = "改 / 删时输入记录 Id";
-            //this.txtId.TextChanged += new System.EventHandler(this.txtId_TextChanged);
+            this.layoutContent.ColumnCount = 2;
+            this.layoutContent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 260F));
+            this.layoutContent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutContent.Controls.Add(this.layoutLeft, 0, 0);
+            this.layoutContent.Controls.Add(this.layoutRight, 1, 0);
+            this.layoutContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutContent.Location = new System.Drawing.Point(13, 72);
+            this.layoutContent.Name = "layoutContent";
+            this.layoutContent.RowCount = 1;
+            this.layoutContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutContent.Size = new System.Drawing.Size(1104, 558);
+            this.layoutContent.TabIndex = 1;
             // 
-            // txtLog
+            // layoutLeft
             // 
-            this.txtLog.Location = new System.Drawing.Point(216, 106);
-            this.txtLog.Multiline = true;
-            this.txtLog.Name = "txtLog";
-            this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(678, 276);
-            this.txtLog.TabIndex = 7;
-            this.txtLog.Text = "多行日志";
-            //this.txtLog.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
+            this.layoutLeft.ColumnCount = 1;
+            this.layoutLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.layoutLeft.Controls.Add(this.grpManual, 0, 1);
+            this.layoutLeft.Controls.Add(this.grpRealtime, 0, 0);
+            this.layoutLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutLeft.Location = new System.Drawing.Point(3, 3);
+            this.layoutLeft.Name = "layoutLeft";
+            this.layoutLeft.RowCount = 2;
+            this.layoutLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.layoutLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
+            this.layoutLeft.Size = new System.Drawing.Size(254, 552);
+            this.layoutLeft.TabIndex = 0;
             // 
-            // label1
+            // grpManual
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(213, 48);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 18);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "数值：";
-            //this.label1.Click += new System.EventHandler(this.label1_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(448, 48);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(62, 18);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "备注：";
+            this.grpManual.Controls.Add(this.label3);
+            this.grpManual.Controls.Add(this.label2);
+            this.grpManual.Controls.Add(this.label1);
+            this.grpManual.Controls.Add(this.btnDelete);
+            this.grpManual.Controls.Add(this.btnUpdate);
+            this.grpManual.Controls.Add(this.btnInsert);
+            this.grpManual.Controls.Add(this.txtId);
+            this.grpManual.Controls.Add(this.txtRemark);
+            this.grpManual.Controls.Add(this.txtValue);
+            this.grpManual.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpManual.Location = new System.Drawing.Point(3, 223);
+            this.grpManual.Name = "grpManual";
+            this.grpManual.Size = new System.Drawing.Size(248, 326);
+            this.grpManual.TabIndex = 0;
+            this.grpManual.TabStop = false;
+            this.grpManual.Text = "手动操作";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(687, 51);
+            this.label3.Location = new System.Drawing.Point(6, 137);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(44, 18);
-            this.label3.TabIndex = 10;
+            this.label3.TabIndex = 59;
             this.label3.Text = "id：";
-            //this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
-            // chkTime
+            // label2
             // 
-            this.chkTime.AutoSize = true;
-            this.chkTime.Location = new System.Drawing.Point(438, 701);
-            this.chkTime.Name = "chkTime";
-            this.chkTime.Size = new System.Drawing.Size(124, 22);
-            this.chkTime.TabIndex = 11;
-            this.chkTime.Text = "按时间过滤";
-            this.chkTime.UseVisualStyleBackColor = true;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 82);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(62, 18);
+            this.label2.TabIndex = 58;
+            this.label2.Text = "备注：";
             // 
-            // dtpStart
+            // label1
             // 
-            this.dtpStart.CustomFormat = "yyyy-MM-dd HH:mm:ss";
-            this.dtpStart.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpStart.Location = new System.Drawing.Point(216, 644);
-            this.dtpStart.Name = "dtpStart";
-            this.dtpStart.ShowUpDown = true;
-            this.dtpStart.Size = new System.Drawing.Size(216, 28);
-            this.dtpStart.TabIndex = 12;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 24);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(62, 18);
+            this.label1.TabIndex = 57;
+            this.label1.Text = "数值：";
             // 
-            // dtpEnd
+            // btnDelete
             // 
-            this.dtpEnd.CustomFormat = "yyyy-MM-dd HH:mm:ss";
-            this.dtpEnd.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpEnd.Location = new System.Drawing.Point(216, 695);
-            this.dtpEnd.Name = "dtpEnd";
-            this.dtpEnd.ShowUpDown = true;
-            this.dtpEnd.Size = new System.Drawing.Size(216, 28);
-            this.dtpEnd.TabIndex = 13;
+            this.btnDelete.Location = new System.Drawing.Point(6, 285);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(89, 35);
+            this.btnDelete.TabIndex = 56;
+            this.btnDelete.Text = "删除";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
-            // txtKeyword
+            // btnUpdate
             // 
-            this.txtKeyword.Location = new System.Drawing.Point(86, 403);
-            this.txtKeyword.Name = "txtKeyword";
-            this.txtKeyword.Size = new System.Drawing.Size(100, 28);
-            this.txtKeyword.TabIndex = 14;
+            this.btnUpdate.Location = new System.Drawing.Point(6, 244);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(89, 35);
+            this.btnUpdate.TabIndex = 55;
+            this.btnUpdate.Text = "更新";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
-            // btnRefresh
+            // btnInsert
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(60, 452);
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(126, 28);
-            this.btnRefresh.TabIndex = 15;
-            this.btnRefresh.Text = "刷新（全部）";
-            this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            this.btnInsert.Location = new System.Drawing.Point(6, 201);
+            this.btnInsert.Name = "btnInsert";
+            this.btnInsert.Size = new System.Drawing.Size(89, 37);
+            this.btnInsert.TabIndex = 54;
+            this.btnInsert.Text = "插入";
+            this.btnInsert.UseVisualStyleBackColor = true;
+            this.btnInsert.Click += new System.EventHandler(this.btnInsert_Click);
             // 
-            // btnPrev
+            // txtId
             // 
-            this.btnPrev.Location = new System.Drawing.Point(60, 499);
-            this.btnPrev.Name = "btnPrev";
-            this.btnPrev.Size = new System.Drawing.Size(126, 23);
-            this.btnPrev.TabIndex = 16;
-            this.btnPrev.Text = "上一页";
-            this.btnPrev.UseVisualStyleBackColor = true;
-            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
+            this.txtId.Location = new System.Drawing.Point(6, 158);
+            this.txtId.Name = "txtId";
+            this.txtId.Size = new System.Drawing.Size(204, 28);
+            this.txtId.TabIndex = 53;
             // 
-            // btnNext
+            // txtRemark
             // 
-            this.btnNext.Location = new System.Drawing.Point(59, 539);
-            this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(127, 23);
-            this.btnNext.TabIndex = 17;
-            this.btnNext.Text = "下一页";
-            this.btnNext.UseVisualStyleBackColor = true;
-            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            this.txtRemark.Location = new System.Drawing.Point(6, 103);
+            this.txtRemark.Name = "txtRemark";
+            this.txtRemark.Size = new System.Drawing.Size(204, 28);
+            this.txtRemark.TabIndex = 52;
+            // 
+            // txtValue
+            // 
+            this.txtValue.Location = new System.Drawing.Point(6, 47);
+            this.txtValue.Name = "txtValue";
+            this.txtValue.Size = new System.Drawing.Size(204, 28);
+            this.txtValue.TabIndex = 51;
+            // 
+            // grpRealtime
+            // 
+            this.grpRealtime.Controls.Add(this.lblFailCount);
+            this.grpRealtime.Controls.Add(this.label11);
+            this.grpRealtime.Controls.Add(this.lblCollectCount);
+            this.grpRealtime.Controls.Add(this.label9);
+            this.grpRealtime.Controls.Add(this.lblRunDuration);
+            this.grpRealtime.Controls.Add(this.label5);
+            this.grpRealtime.Controls.Add(this.lblLatestTime);
+            this.grpRealtime.Controls.Add(this.label8);
+            this.grpRealtime.Controls.Add(this.lblRunStatus);
+            this.grpRealtime.Controls.Add(this.label6);
+            this.grpRealtime.Controls.Add(this.lblCurrentValue);
+            this.grpRealtime.Controls.Add(this.label4);
+            this.grpRealtime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpRealtime.Location = new System.Drawing.Point(3, 3);
+            this.grpRealtime.Name = "grpRealtime";
+            this.grpRealtime.Size = new System.Drawing.Size(248, 214);
+            this.grpRealtime.TabIndex = 1;
+            this.grpRealtime.TabStop = false;
+            this.grpRealtime.Text = "实时监控";
+            // 
+            // lblLatestTime
+            // 
+            this.lblLatestTime.AutoSize = true;
+            this.lblLatestTime.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblLatestTime.Location = new System.Drawing.Point(100, 85);
+            this.lblLatestTime.Name = "lblLatestTime";
+            this.lblLatestTime.Size = new System.Drawing.Size(36, 25);
+            this.lblLatestTime.TabIndex = 5;
+            this.lblLatestTime.Text = "---";
+            //this.lblLatestTime.Click += new System.EventHandler(this.lblLatestTime_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 85);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(89, 18);
+            this.label8.TabIndex = 4;
+            this.label8.Text = "最新时间:";
+            // 
+            // lblRunStatus
+            // 
+            this.lblRunStatus.AutoSize = true;
+            this.lblRunStatus.Location = new System.Drawing.Point(97, 51);
+            this.lblRunStatus.Name = "lblRunStatus";
+            this.lblRunStatus.Size = new System.Drawing.Size(62, 18);
+            this.lblRunStatus.TabIndex = 3;
+            this.lblRunStatus.Text = "未运行";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 51);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(89, 18);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "运行状态:";
+            // 
+            // lblCurrentValue
+            // 
+            this.lblCurrentValue.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblCurrentValue.Location = new System.Drawing.Point(77, 20);
+            this.lblCurrentValue.Name = "lblCurrentValue";
+            this.lblCurrentValue.Size = new System.Drawing.Size(46, 26);
+            this.lblCurrentValue.TabIndex = 1;
+            this.lblCurrentValue.Text = "---";
+            this.lblCurrentValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            //this.lblCurrentValue.Click += new System.EventHandler(this.lblCurrentValue_Click);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(18, 406);
+            this.label4.Location = new System.Drawing.Point(6, 20);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(62, 18);
-            this.label4.TabIndex = 19;
-            this.label4.Text = "关键字";
+            this.label4.Size = new System.Drawing.Size(71, 18);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "当前值:";
             // 
-            // lblPageInfo
+            // layoutRight
             // 
-            this.lblPageInfo.AutoSize = true;
-            this.lblPageInfo.Location = new System.Drawing.Point(438, 644);
-            this.lblPageInfo.Name = "lblPageInfo";
-            this.lblPageInfo.Size = new System.Drawing.Size(188, 18);
-            this.lblPageInfo.TabIndex = 20;
-            this.lblPageInfo.Text = "第 1 / 1 页，共 0 条";
-            //this.lblPageInfo.Click += new System.EventHandler(this.label5_Click);
+            this.layoutRight.ColumnCount = 1;
+            this.layoutRight.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutRight.Controls.Add(this.dataGridView1, 0, 1);
+            this.layoutRight.Controls.Add(this.grpQuery, 0, 0);
+            this.layoutRight.Controls.Add(this.panelPage, 0, 2);
+            this.layoutRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutRight.Location = new System.Drawing.Point(263, 3);
+            this.layoutRight.Name = "layoutRight";
+            this.layoutRight.RowCount = 3;
+            this.layoutRight.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.layoutRight.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutRight.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.layoutRight.Size = new System.Drawing.Size(838, 552);
+            this.layoutRight.TabIndex = 1;
             // 
             // dataGridView1
             // 
@@ -261,13 +393,13 @@
             this.colTime,
             this.colValue,
             this.colRemark});
-            this.dataGridView1.Location = new System.Drawing.Point(216, 398);
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(3, 63);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 30;
-            this.dataGridView1.Size = new System.Drawing.Size(678, 225);
-            this.dataGridView1.TabIndex = 21;
-            //this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.dataGridView1.Size = new System.Drawing.Size(832, 446);
+            this.dataGridView1.TabIndex = 47;
             // 
             // colId
             // 
@@ -301,90 +433,246 @@
             this.colRemark.Name = "colRemark";
             this.colRemark.Width = 150;
             // 
-            // txtIP
+            // grpQuery
             // 
-            this.txtIP.Location = new System.Drawing.Point(901, 106);
-            this.txtIP.Name = "txtIP";
-            this.txtIP.Size = new System.Drawing.Size(100, 28);
-            this.txtIP.TabIndex = 22;
+            this.grpQuery.Controls.Add(this.btnRefresh);
+            this.grpQuery.Controls.Add(this.btnQuery);
+            this.grpQuery.Controls.Add(this.txtKeyword);
+            this.grpQuery.Controls.Add(this.dtpEnd);
+            this.grpQuery.Controls.Add(this.dtpStart);
+            this.grpQuery.Controls.Add(this.chkTime);
+            this.grpQuery.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpQuery.Location = new System.Drawing.Point(3, 3);
+            this.grpQuery.Name = "grpQuery";
+            this.grpQuery.Size = new System.Drawing.Size(832, 54);
+            this.grpQuery.TabIndex = 0;
+            this.grpQuery.TabStop = false;
+            this.grpQuery.Text = "历史查询";
             // 
-            // btnConnect
+            // btnRefresh
             // 
-            this.btnConnect.Location = new System.Drawing.Point(901, 141);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(100, 29);
-            this.btnConnect.TabIndex = 23;
-            this.btnConnect.Text = "连接";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            this.btnRefresh.Location = new System.Drawing.Point(717, 24);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(109, 26);
+            this.btnRefresh.TabIndex = 42;
+            this.btnRefresh.Text = "刷新（全部）";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
-            // btnStart
+            // btnQuery
             // 
-            this.btnStart.Location = new System.Drawing.Point(900, 176);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(100, 37);
-            this.btnStart.TabIndex = 24;
-            this.btnStart.Text = "开始采集";
-            this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            this.btnQuery.Location = new System.Drawing.Point(622, 22);
+            this.btnQuery.Name = "btnQuery";
+            this.btnQuery.Size = new System.Drawing.Size(89, 28);
+            this.btnQuery.TabIndex = 42;
+            this.btnQuery.Text = "查询";
+            this.btnQuery.UseVisualStyleBackColor = true;
+            this.btnQuery.Click += new System.EventHandler(this.btnQuery_Click);
             // 
-            // lblStatus
+            // txtKeyword
             // 
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(901, 81);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(89, 18);
-            this.lblStatus.TabIndex = 25;
-            this.lblStatus.Text = "● 未连接";
+            this.txtKeyword.Location = new System.Drawing.Point(516, 20);
+            this.txtKeyword.Name = "txtKeyword";
+            this.txtKeyword.Size = new System.Drawing.Size(100, 28);
+            this.txtKeyword.TabIndex = 41;
+            // 
+            // dtpEnd
+            // 
+            this.dtpEnd.CustomFormat = "yyyy-MM-dd HH:mm:ss";
+            this.dtpEnd.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpEnd.Location = new System.Drawing.Point(309, 20);
+            this.dtpEnd.Name = "dtpEnd";
+            this.dtpEnd.ShowUpDown = true;
+            this.dtpEnd.Size = new System.Drawing.Size(201, 28);
+            this.dtpEnd.TabIndex = 40;
+            // 
+            // dtpStart
+            // 
+            this.dtpStart.CustomFormat = "yyyy-MM-dd HH:mm:ss";
+            this.dtpStart.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpStart.Location = new System.Drawing.Point(115, 20);
+            this.dtpStart.Name = "dtpStart";
+            this.dtpStart.ShowUpDown = true;
+            this.dtpStart.Size = new System.Drawing.Size(201, 28);
+            this.dtpStart.TabIndex = 39;
+            // 
+            // chkTime
+            // 
+            this.chkTime.AutoSize = true;
+            this.chkTime.Location = new System.Drawing.Point(2, 26);
+            this.chkTime.Name = "chkTime";
+            this.chkTime.Size = new System.Drawing.Size(124, 22);
+            this.chkTime.TabIndex = 38;
+            this.chkTime.Text = "按时间过滤";
+            this.chkTime.UseVisualStyleBackColor = true;
+            // 
+            // panelPage
+            // 
+            this.panelPage.Controls.Add(this.lblPageInfo);
+            this.panelPage.Controls.Add(this.btnNext);
+            this.panelPage.Controls.Add(this.btnPrev);
+            this.panelPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelPage.Location = new System.Drawing.Point(3, 515);
+            this.panelPage.Name = "panelPage";
+            this.panelPage.Size = new System.Drawing.Size(832, 34);
+            this.panelPage.TabIndex = 1;
+            // 
+            // lblPageInfo
+            // 
+            this.lblPageInfo.AutoSize = true;
+            this.lblPageInfo.Location = new System.Drawing.Point(322, 8);
+            this.lblPageInfo.Name = "lblPageInfo";
+            this.lblPageInfo.Size = new System.Drawing.Size(188, 18);
+            this.lblPageInfo.TabIndex = 46;
+            this.lblPageInfo.Text = "第 1 / 1 页，共 0 条";
+            // 
+            // btnNext
+            // 
+            this.btnNext.Location = new System.Drawing.Point(516, 3);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(127, 31);
+            this.btnNext.TabIndex = 44;
+            this.btnNext.Text = "下一页";
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            // 
+            // btnPrev
+            // 
+            this.btnPrev.Location = new System.Drawing.Point(190, 3);
+            this.btnPrev.Name = "btnPrev";
+            this.btnPrev.Size = new System.Drawing.Size(126, 28);
+            this.btnPrev.TabIndex = 43;
+            this.btnPrev.Text = "上一页";
+            this.btnPrev.UseVisualStyleBackColor = true;
+            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
+            // 
+            // grpLog
+            // 
+            this.grpLog.Controls.Add(this.txtLog);
+            this.grpLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpLog.Location = new System.Drawing.Point(13, 636);
+            this.grpLog.Name = "grpLog";
+            this.grpLog.Size = new System.Drawing.Size(1104, 104);
+            this.grpLog.TabIndex = 2;
+            this.grpLog.TabStop = false;
+            this.grpLog.Text = "运行日志";
+            // 
+            // txtLog
+            // 
+            this.txtLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtLog.Location = new System.Drawing.Point(3, 24);
+            this.txtLog.Multiline = true;
+            this.txtLog.Name = "txtLog";
+            this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtLog.Size = new System.Drawing.Size(1098, 77);
+            this.txtLog.TabIndex = 34;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 118);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(89, 18);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "运行时长:";
+            // 
+            // lblRunDuration
+            // 
+            this.lblRunDuration.AutoSize = true;
+            this.lblRunDuration.Location = new System.Drawing.Point(97, 118);
+            this.lblRunDuration.Name = "lblRunDuration";
+            this.lblRunDuration.Size = new System.Drawing.Size(80, 18);
+            this.lblRunDuration.TabIndex = 7;
+            this.lblRunDuration.Text = "00:00:00";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 152);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(89, 18);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "本次采集:";
+            // 
+            // lblCollectCount
+            // 
+            this.lblCollectCount.AutoSize = true;
+            this.lblCollectCount.Location = new System.Drawing.Point(101, 152);
+            this.lblCollectCount.Name = "lblCollectCount";
+            this.lblCollectCount.Size = new System.Drawing.Size(35, 18);
+            this.lblCollectCount.TabIndex = 9;
+            this.lblCollectCount.Text = "0条";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 181);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(89, 18);
+            this.label11.TabIndex = 10;
+            this.label11.Text = "失败次数:";
+            //this.label11.Click += new System.EventHandler(this.label11_Click);
+            // 
+            // lblFailCount
+            // 
+            this.lblFailCount.AutoSize = true;
+            this.lblFailCount.Location = new System.Drawing.Point(101, 181);
+            this.lblFailCount.Name = "lblFailCount";
+            this.lblFailCount.Size = new System.Drawing.Size(35, 18);
+            this.lblFailCount.TabIndex = 11;
+            this.lblFailCount.Text = "0次";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1130, 753);
-            this.Controls.Add(this.lblStatus);
-            this.Controls.Add(this.btnStart);
-            this.Controls.Add(this.btnConnect);
-            this.Controls.Add(this.txtIP);
-            this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.lblPageInfo);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.btnNext);
-            this.Controls.Add(this.btnPrev);
-            this.Controls.Add(this.btnRefresh);
-            this.Controls.Add(this.txtKeyword);
-            this.Controls.Add(this.dtpEnd);
-            this.Controls.Add(this.dtpStart);
-            this.Controls.Add(this.chkTime);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.txtLog);
-            this.Controls.Add(this.txtId);
-            this.Controls.Add(this.txtRemark);
-            this.Controls.Add(this.txtValue);
-            this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.btnUpdate);
-            this.Controls.Add(this.btnQuery);
-            this.Controls.Add(this.btnInsert);
+            this.Controls.Add(this.layoutMain);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.grpConnection.ResumeLayout(false);
+            this.grpConnection.PerformLayout();
+            this.layoutMain.ResumeLayout(false);
+            this.layoutContent.ResumeLayout(false);
+            this.layoutLeft.ResumeLayout(false);
+            this.grpManual.ResumeLayout(false);
+            this.grpManual.PerformLayout();
+            this.grpRealtime.ResumeLayout(false);
+            this.grpRealtime.PerformLayout();
+            this.layoutRight.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.grpQuery.ResumeLayout(false);
+            this.grpQuery.PerformLayout();
+            this.panelPage.ResumeLayout(false);
+            this.panelPage.PerformLayout();
+            this.grpLog.ResumeLayout(false);
+            this.grpLog.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button btnInsert;
-        private System.Windows.Forms.Button btnQuery;
-        private System.Windows.Forms.Button btnUpdate;
-        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.GroupBox grpConnection;
+        private System.Windows.Forms.TableLayoutPanel layoutMain;
+        private System.Windows.Forms.TableLayoutPanel layoutContent;
+        private System.Windows.Forms.GroupBox grpLog;
+        private System.Windows.Forms.TableLayoutPanel layoutLeft;
+        private System.Windows.Forms.GroupBox grpManual;
+        private System.Windows.Forms.TableLayoutPanel layoutRight;
+        private System.Windows.Forms.GroupBox grpQuery;
+        private System.Windows.Forms.Panel panelPage;
+        private System.Windows.Forms.GroupBox grpRealtime;
+        private System.Windows.Forms.TextBox txtIP;
+        private System.Windows.Forms.Button btnConnect;
+        private System.Windows.Forms.Button btnStart;
+        private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.TextBox txtValue;
         private System.Windows.Forms.TextBox txtRemark;
         private System.Windows.Forms.TextBox txtId;
-        public System.Windows.Forms.TextBox txtLog;
+        private System.Windows.Forms.Button btnInsert;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
@@ -392,20 +680,29 @@
         private System.Windows.Forms.DateTimePicker dtpStart;
         private System.Windows.Forms.DateTimePicker dtpEnd;
         private System.Windows.Forms.TextBox txtKeyword;
+        private System.Windows.Forms.Button btnQuery;
         private System.Windows.Forms.Button btnRefresh;
-        private System.Windows.Forms.Button btnPrev;
-        private System.Windows.Forms.Button btnNext;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label lblPageInfo;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridViewTextBoxColumn colId;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn colValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colRemark;
-        private System.Windows.Forms.TextBox txtIP;
-        private System.Windows.Forms.Button btnConnect;
-        private System.Windows.Forms.Button btnStart;
-        private System.Windows.Forms.Label lblStatus;
+        private System.Windows.Forms.Button btnPrev;
+        private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.Label lblPageInfo;
+        public System.Windows.Forms.TextBox txtLog;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lblRunStatus;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblCurrentValue;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblLatestTime;
+        private System.Windows.Forms.Label lblRunDuration;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lblFailCount;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lblCollectCount;
+        private System.Windows.Forms.Label label9;
     }
 }
 

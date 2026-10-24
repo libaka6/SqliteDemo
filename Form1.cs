@@ -8,9 +8,11 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace SqliteDemo
 {
+    //以下注释皆为ai生成，ai是真好用啊
     public partial class Form1 : Form
     {
         // ==================== 字段区 ====================
@@ -30,6 +32,11 @@ namespace SqliteDemo
         private IModbusMaster _master;
         private bool _connected = false;   // Modbus 连接状态
         private bool _running = false;     // 采集循环是否运行
+        // ----- 运行统计（D19） -----
+        private Stopwatch _stopwatch;          // 高精度秒表
+        private Timer _timerClock;             // 独立时钟（System.Windows.Forms.Timer）
+        private int _collectCount = 0;         // 本次采集成功数
+        private int _failCount = 0;            // 本次失败数
 
         // ==================== 生命周期 ====================
 
@@ -41,6 +48,10 @@ namespace SqliteDemo
             this.Load += Form1_Load;
             this.FormClosing += Form1_FormClosing;
             this.dataGridView1.CellClick += dataGridView1_CellClick;
+            // 独立时钟：每秒刷新一次运行时长（Tick 在 UI 线程，直接改控件）
+            _timerClock = new Timer();
+            _timerClock.Interval = 1000;
+            _timerClock.Tick += TimerClock_Tick;
 
             // 表格设置
             dataGridView1.AutoGenerateColumns = false;   // 防中英双份列
@@ -243,21 +254,21 @@ namespace SqliteDemo
         }
 
         // 后台线程执行：读 Modbus float → 带时间戳入库；成功返回 true
-        private bool CollectAndSave()
+        private float? CollectAndSave()
         {
-            if (!_connected || _master == null) return false;
+            if (!_connected || _master == null) return null;
             try
             {
                 ushort[] r = _master.ReadHoldingRegisters(1, 0, 10);
                 float val = ToFloat(r[0], r[1]);                       // 读 float 模拟量
                 string time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 InsertRecord(time, val, "自动采集");
-                return true;
+                return val;
             }
             catch
             {
                 _connected = false;   // 读失败 = 断线，标记状态
-                return false;
+                return null;
             }
         }
 
@@ -266,20 +277,26 @@ namespace SqliteDemo
         {
             while (_running)
             {
-                // 采集+入库放线程池；await 之后自动回到 UI 线程
-                bool ok = await Task.Run(() => CollectAndSave());
+                float? val = await Task.Run(() => CollectAndSave());
 
-                if (ok)
+                if (val.HasValue)
                 {
+                    lblCurrentValue.Text = val.Value.ToString("F2");
+                    lblRunStatus.Text = "采集中";
+                    _collectCount++;
+                    lblCollectCount.Text = _collectCount + "条";
+                    lblLatestTime.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     ShowStatus("● 采集中，已入库", Color.Green);
-                    LoadData();          // 回到 UI 线程后才刷新表格
+                    LoadData();
                 }
                 else
                 {
+                    lblRunStatus.Text = "采集失败";
                     ShowStatus("● 采集/入库失败", Color.Red);
+                    _failCount++;
+                    lblFailCount.Text = _failCount + " 次";
                 }
-
-                await Task.Delay(1000);  // 1 秒一拍
+                await Task.Delay(1000);   // 1 秒一拍
             }
         }
 
@@ -297,6 +314,15 @@ namespace SqliteDemo
         private int ToInt32(ushort high, ushort low) { return (high << 16) | low; }
 
         // ==================== 辅助方法 ====================
+        // 时钟心跳：每秒把秒表读数写上"黑板"（UI 线程）
+        private void TimerClock_Tick(object sender, EventArgs e)
+        {
+            if (_stopwatch == null) return;   // 防御：秒表还没造好就不看
+            TimeSpan ts = _stopwatch.Elapsed;
+            // 超过 24 小时用 TotalHours，否则 Hours 归零会显示乱套
+            lblRunDuration.Text = string.Format("{0:00}:{1:00}:{2:00}",
+                (int)ts.TotalHours, ts.Minutes, ts.Seconds);
+        }
 
         private void ShowStatus(string text, Color color)
         {
@@ -325,6 +351,8 @@ namespace SqliteDemo
                 btnConnect.Text = "连接";
                 btnStart.Text = "开始采集";
                 ShowStatus("● 已断开", Color.Gray);
+                _timerClock.Stop();
+                _stopwatch?.Stop();
             }
         }
 
@@ -336,6 +364,12 @@ namespace SqliteDemo
                 if (!_connected) { MessageBox.Show("请先连接 Modbus"); return; }
                 _running = true;
                 btnStart.Text = "停止采集";
+                _collectCount = 0;
+                _failCount = 0;
+                lblCollectCount.Text = "0条";
+                lblFailCount.Text = "0次";
+                _stopwatch = Stopwatch.StartNew();// 秒表从零开始计时
+                _timerClock.Start();// 启动独立时钟
                 await AcquisitionLoopAsync();   // 启动循环，直到 _running=false 才返回
             }
             else
@@ -343,6 +377,9 @@ namespace SqliteDemo
                 _running = false;
                 btnStart.Text = "开始采集";
                 ShowStatus("● 已停止采集", Color.Gray);
+                lblRunStatus.Text = "已停止";
+                _timerClock.Stop();
+                _stopwatch.Stop();
             }
         }
 
