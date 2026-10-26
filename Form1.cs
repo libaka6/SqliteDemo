@@ -9,6 +9,11 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using LiveCharts;
+using LiveCharts.Wpf;
+using Media = System.Windows.Media;   // 别名！防止和 System.Drawing 撞名
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace SqliteDemo
 {
@@ -37,6 +42,15 @@ namespace SqliteDemo
         private Timer _timerClock;             // 独立时钟（System.Windows.Forms.Timer）
         private int _collectCount = 0;         // 本次采集成功数
         private int _failCount = 0;            // 本次失败数
+        // ----- 报警（D20） -----
+        private bool _isAlarming = false;    // 状态记忆位：现在是否处于报警中
+        private Timer _timerBlink;           // 闪烁定时器（WinForms Timer）
+        private bool _blinkFlag = false;     // 闪烁翻转标志（红/灰交替）
+        // ----- 实时曲线（D22） -----
+        private SeriesCollection _chartSeries;          // 曲线集合
+        private ChartValues<double> _chartValues;       // 数据点
+        private List<string> _chartLabels;              // X 轴时间标签
+        private const int MaxPoints = 50;               // 最多 50 个点
 
         // ==================== 生命周期 ====================
 
@@ -52,6 +66,10 @@ namespace SqliteDemo
             _timerClock = new Timer();
             _timerClock.Interval = 1000;
             _timerClock.Tick += TimerClock_Tick;
+            // 闪烁定时器：报警时红灰交替（Tick 在 UI 线程，直接改颜色）
+            _timerBlink = new Timer();
+            _timerBlink.Interval = 500;
+            _timerBlink.Tick += TimerBlink_Tick;
 
             // 表格设置
             dataGridView1.AutoGenerateColumns = false;   // 防中英双份列
@@ -74,13 +92,45 @@ namespace SqliteDemo
             txtLog.AppendText("数据库路径：" + _dbPath + "\r\n");
             InitDb();                      // 启动即建表
             LoadData();                    // 启动即加载表格
+            LoadAlarms();                  // 启动即加载报警记录
             txtIP.Text = "127.0.0.1";      // IP 框默认值
+                                           // 初始化实时曲线（D22）
+            _chartValues = new ChartValues<double>();
+            _chartLabels = new List<string>();
+
+            LineSeries line = new LineSeries
+            {
+                Title = "采集值",
+                Values = _chartValues,
+                PointGeometry = null,              // 只画线不画点圈，更流畅
+                StrokeThickness = 2,
+                Fill = Media.Brushes.Transparent   // 别名 Media.，去面积裙摆
+            };
+
+            _chartSeries = new SeriesCollection { line };
+            cartesianChart1.Series = _chartSeries;
+
+            cartesianChart1.AxisX.Add(new Axis
+            {
+                Title = "时间",
+                Labels = _chartLabels,
+                Separator = new Separator { Step = 10 }   // 每 10 点标一个，防挤
+            });
+
+            cartesianChart1.AxisY.Add(new Axis
+            {
+                Title = "值",
+                LabelFormatter = value => value.ToString("F1")
+            });
+
+            cartesianChart1.LegendLocation = LegendLocation.Top;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             _running = false;      // 先停采集循环（让 async 循环自然退出）
             DisconnectMaster();    // 再断 Modbus 连接
+            ResetAlarmState();
         }
 
         // ==================== 数据库层 ====================
@@ -101,6 +151,18 @@ namespace SqliteDemo
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
                     cmd.ExecuteNonQuery();   // 执行建表，不返回结果集
+                }
+                // 报警记录表（D20）
+                string sqlAlarm = @"CREATE TABLE IF NOT EXISTS AlarmRecord (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            AlarmTime TEXT NOT NULL,
+            Value REAL,
+            AlarmType TEXT,
+            Message TEXT
+        );";
+                using (SQLiteCommand cmd2 = new SQLiteCommand(sqlAlarm, conn))
+                {
+                    cmd2.ExecuteNonQuery();
                 }
             }
             txtLog.AppendText("已就绪：数据库与表已创建\r\n");
@@ -150,6 +212,64 @@ namespace SqliteDemo
                     tran.Commit();   // 只在最后刷一次盘
                 }
             }
+        }
+        // ==================== 报警层 ====================
+
+        // 阈值判断：超上限→"高报"，低于下限→"低报"，正常→null
+        private string CheckAlarm(float val)
+        {
+            if (double.TryParse(txtHighLimit.Text, out double high) && val > high)
+                return "高报";
+            if (double.TryParse(txtLowLimit.Text, out double low) && val < low)
+                return "低报";
+            return null;
+        }
+
+        // 写一条报警记录（参数化，风格与 InsertRecord 一致）
+        private int InsertAlarm(string time, double val, string type, string message)
+        {
+            using (SQLiteConnection conn = new SQLiteConnection(_connStr))
+            {
+                conn.Open();
+                using (SQLiteCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "INSERT INTO AlarmRecord(AlarmTime,Value,AlarmType,Message) VALUES(@time,@val,@type,@msg);";
+                    cmd.Parameters.AddWithValue("@time", time);
+                    cmd.Parameters.AddWithValue("@val", val);
+                    cmd.Parameters.AddWithValue("@type", type);
+                    cmd.Parameters.AddWithValue("@msg", message);
+                    return cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // 加载报警记录到 dgvAlarm（启动时 + 每次新报警后调用）
+        private void LoadAlarms()
+        {
+            List<AlarmRecord> list = new List<AlarmRecord>();
+            using (SQLiteConnection conn = new SQLiteConnection(_connStr))
+            {
+                conn.Open();
+                using (SQLiteCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT Id,AlarmTime,Value,AlarmType,Message FROM AlarmRecord ORDER BY Id DESC;";
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new AlarmRecord
+                            {
+                                Id = reader.GetInt32(0),
+                                AlarmTime = reader.GetString(1),
+                                Value = reader.GetDouble(2),
+                                AlarmType = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                                Message = reader.IsDBNull(4) ? "" : reader.GetString(4)
+                            });
+                        }
+                    }
+                }
+            }
+            dgvAlarm.DataSource = list;
         }
 
         // 根据界面控件构造 WHERE 子句；拼接的是固定 SQL 片段，用户输入都进参数
@@ -215,6 +335,66 @@ namespace SqliteDemo
             dataGridView1.DataSource = list;   // 绑定表格
             UpdatePageInfo();
         }
+        // 按当前查询条件取【全部】记录（不分页，专供导出）
+        private List<DataRecord> QueryAllRecords()
+        {
+            List<DataRecord> list = new List<DataRecord>();
+            using (SQLiteConnection conn = new SQLiteConnection(_connStr))
+            {
+                conn.Open();
+                using (SQLiteCommand cmd = conn.CreateCommand())
+                {
+                    string where = BuildWhere(cmd);   // 复用查询条件（含参数！）
+                    cmd.CommandText = "SELECT Id,RecordTime,Value,Remark FROM DataRecord " + where
+                        + " ORDER BY Id ASC;";        // 导出按时间正序（老→新），账本从头读
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new DataRecord
+                            {
+                                Id = reader.GetInt32(0),
+                                RecordTime = reader.GetString(1),
+                                Value = reader.GetDouble(2),
+                                Remark = reader.IsDBNull(3) ? "" : reader.GetString(3)
+                            });
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+        // 把记录写成 xlsx 文件
+        private void ExportToExcel(string path, List<DataRecord> records)
+        {
+            IWorkbook workbook = new XSSFWorkbook();      // 建册（xlsx 用 XSSF）
+            ISheet sheet = workbook.CreateSheet("采集记录");   // 建表
+
+            // 表头（第 0 行）
+            IRow header = sheet.CreateRow(0);
+            header.CreateCell(0).SetCellValue("编号");
+            header.CreateCell(1).SetCellValue("采集时间");
+            header.CreateCell(2).SetCellValue("数值");
+            header.CreateCell(3).SetCellValue("备注");
+
+            // 数据（从第 1 行开始）
+            for (int i = 0; i < records.Count; i++)
+            {
+                IRow row = sheet.CreateRow(i + 1);
+                row.CreateCell(0).SetCellValue(records[i].Id);
+                row.CreateCell(1).SetCellValue(records[i].RecordTime);
+                row.CreateCell(2).SetCellValue(records[i].Value);
+                row.CreateCell(3).SetCellValue(records[i].Remark);
+            }
+
+            sheet.SetColumnWidth(1, 20 * 256);   // 时间列加宽（单位 1/256 字符）
+            sheet.SetColumnWidth(3, 20 * 256);
+
+            using (FileStream fs = new FileStream(path, FileMode.Create))
+            {
+                workbook.Write(fs);   // 写完 fs 自动释放（否则文件被占用打不开）
+            }
+        }
 
         // 更新页码标签和按钮可用状态
         private void UpdatePageInfo()
@@ -278,6 +458,7 @@ namespace SqliteDemo
             while (_running)
             {
                 float? val = await Task.Run(() => CollectAndSave());
+                if (!_running) break;   // 停止/断开后，丢弃这一拍（防回马枪）
 
                 if (val.HasValue)
                 {
@@ -287,6 +468,30 @@ namespace SqliteDemo
                     lblCollectCount.Text = _collectCount + "条";
                     lblLatestTime.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     ShowStatus("● 采集中，已入库", Color.Green);
+                    AddChartPoint(val.Value);
+                    // 报警状态切换（边沿触发）：只在状态翻转那一刻记一次
+                    string alarm = CheckAlarm(val.Value);
+                    if (alarm != null)
+                    {
+                        if (!_isAlarming)   // 正常 → 超限：这一拍记录
+                        {
+                            _isAlarming = true;
+                            string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                            string msg = alarm + "，当前值 " + val.Value.ToString("F2");
+                            InsertAlarm(now, val.Value, alarm, msg);
+                            _timerBlink.Start();
+                            lblAlarmState.Text = "● " + alarm;
+                            LoadAlarms();
+                        }
+                        // 一直超限：不重复写记录（_isAlarming 记忆住了）
+                    }
+                    else
+                    {
+                        if (_isAlarming)    // 超限 → 恢复：解除报警
+                        {
+                            ResetAlarmState();
+                        }
+                    }
                     LoadData();
                 }
                 else
@@ -323,13 +528,42 @@ namespace SqliteDemo
             lblRunDuration.Text = string.Format("{0:00}:{1:00}:{2:00}",
                 (int)ts.TotalHours, ts.Minutes, ts.Seconds);
         }
-
+        // 闪烁心跳：每 500ms 翻转一次颜色（报警时才启动）
+        private void TimerBlink_Tick(object sender, EventArgs e)
+        {
+            _blinkFlag = !_blinkFlag;   // 翻面
+            Color c = _blinkFlag ? Color.Red : Color.Gray;
+            lblCurrentValue.ForeColor = c;
+            lblAlarmState.ForeColor = c;
+        }
+        // 复位报警状态机（停止/断开/关窗时调用——"成对原则"的提炼）
+        private void ResetAlarmState()
+        {
+            _timerBlink?.Stop();
+            _isAlarming = false;
+            _blinkFlag = false;
+            lblAlarmState.Text = "正常";
+            lblAlarmState.ForeColor = Color.Black;
+            lblCurrentValue.ForeColor = Color.Black;
+        }
         private void ShowStatus(string text, Color color)
         {
             lblStatus.Text = text;
             lblStatus.ForeColor = color;
         }
+        // 加一个点：加新删旧实现滚动，点和时间标签同进同退
+        private void AddChartPoint(double val)
+        {
+            _chartValues.Add(val);
+            _chartLabels.Add(DateTime.Now.ToString("HH:mm:ss"));
 
+            if (_chartValues.Count > MaxPoints)
+            {
+                _chartValues.RemoveAt(0);    // 删最老的点
+                _chartLabels.RemoveAt(0);    // 同步删时间标签
+            }
+            cartesianChart1.AxisX[0].Labels = _chartLabels;
+        }
         // ==================== 按钮事件 ====================
 
         // 连接 / 断开 Modbus
@@ -353,6 +587,7 @@ namespace SqliteDemo
                 ShowStatus("● 已断开", Color.Gray);
                 _timerClock.Stop();
                 _stopwatch?.Stop();
+                ResetAlarmState();
             }
         }
 
@@ -368,6 +603,8 @@ namespace SqliteDemo
                 _failCount = 0;
                 lblCollectCount.Text = "0条";
                 lblFailCount.Text = "0次";
+                _chartValues?.Clear();
+                _chartLabels?.Clear();
                 _stopwatch = Stopwatch.StartNew();// 秒表从零开始计时
                 _timerClock.Start();// 启动独立时钟
                 await AcquisitionLoopAsync();   // 启动循环，直到 _running=false 才返回
@@ -380,6 +617,7 @@ namespace SqliteDemo
                 lblRunStatus.Text = "已停止";
                 _timerClock.Stop();
                 _stopwatch.Stop();
+                ResetAlarmState();
             }
         }
 
@@ -482,6 +720,77 @@ namespace SqliteDemo
             txtId.Text = row.Cells["colId"].Value.ToString();
             txtValue.Text = row.Cells["colValue"].Value.ToString();
             txtRemark.Text = row.Cells["colRemark"].Value.ToString();
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            List<DataRecord> records = QueryAllRecords();
+            if (records.Count == 0) { MessageBox.Show("没有可导出的数据"); return; }
+
+            using (SaveFileDialog dlg = new SaveFileDialog
+            {
+                Filter = "Excel 文件|*.xlsx",
+                FileName = "采集记录_" + DateTime.Now.ToString("yyyyMMdd_HHmmss")
+            })
+            {
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        ExportToExcel(dlg.FileName, records);
+                        MessageBox.Show("导出成功，共 " + records.Count + " 条");
+                        txtLog.AppendText("导出 Excel：" + dlg.FileName + "\r\n");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("导出失败：" + ex.Message);
+                    }
+                }
+            }
+        }
+
+        private void btnBatchDelete_Click(object sender, EventArgs e)
+        {
+            // ① 收集选中行的 Id
+            List<int> ids = new List<int>();
+            foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+            {
+                if (row.Cells["colId"].Value != null)
+                    ids.Add(Convert.ToInt32(row.Cells["colId"].Value));
+            }
+
+            if (ids.Count == 0)
+            {
+                MessageBox.Show("请先选中要删除的行（按住 Ctrl 可多选）");
+                return;
+            }
+
+            // ② 二次确认（危险操作必弹，显示条数防误删）
+            if (MessageBox.Show("确认删除选中的 " + ids.Count + " 条记录？此操作不可恢复",
+                "批量删除确认", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) != DialogResult.OK)
+                return;
+
+            // ③ 参数化 IN 删除（一条 DELETE，天然原子）
+            using (SQLiteConnection conn = new SQLiteConnection(_connStr))
+            {
+                conn.Open();
+                using (SQLiteCommand cmd = conn.CreateCommand())
+                {
+                    List<string> paras = new List<string>();
+                    for (int i = 0; i < ids.Count; i++)
+                    {
+                        string p = "@id" + i;
+                        paras.Add(p);
+                        cmd.Parameters.AddWithValue(p, ids[i]);
+                    }
+                    cmd.CommandText = "DELETE FROM DataRecord WHERE Id IN (" + string.Join(",", paras) + ");";
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            // ④ 反馈 + 刷新
+            txtLog.AppendText("批量删除 " + ids.Count + " 条\r\n");
+            LoadData();
         }
     }
 }
